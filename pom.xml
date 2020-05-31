@@ -17,6 +17,14 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
+    <distributionManagement>
+        <snapshotRepository>
+            <id>lzm-snapshots</id>
+            <name>localhost.localdomain-snapshots</name>
+            <url>http://192.168.33.10:8081/artifactory/libs-snapshot-local</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <dependencies>
 
         <dependency>
