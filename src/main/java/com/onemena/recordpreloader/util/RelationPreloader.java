@@ -6,6 +6,7 @@ import com.onemena.recordpreloader.exception.RecordNotPreloadException;
 import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -18,27 +19,38 @@ public class RelationPreloader {
     static final String NIL = ":nil";
 
     /**
-     * The type Has one preloader.
+     * 一般target对象中有current类的主键.
      *
-     * @param <T> the type parameter
-     * @param <K> the type parameter
-     * @param <F> the type parameter
+     * @param <T> current类的类型。
+     * @param <K> target对象的类型
+     * @param <H> preload结果用来分组的key，为current对象的主键
      */
     @SuppressWarnings("unchecked")
-    public static class HasOnePreloader<T extends IdEntity<F>, K, F extends Serializable> extends RelationPreloader {
-        private Function<K, F> relationGetGroupNameFunc;
-
-        public Function<K, F> getRelationGetGroupNameFunc() {
+    public static class HasOnePreloader<T extends IdEntity<H>, H extends Serializable, K, P> extends RelationPreloader {
+        public Function<K, H> getRelationGetGroupNameFunc() {
             return relationGetGroupNameFunc;
         }
+
+        public BiFunction<List<H>, P, List<K>> getTargetRecordsFunc() {
+            return targetRecordsFunc;
+        }
+
+        private Function<K, H> relationGetGroupNameFunc;
+
+        private BiFunction<List<H>, P, List<K>> targetRecordsFunc;
 
         /**
          * Instantiates a new Has one preloader.
          *
-         * @param relationGetGroupNameFunc the relation get group name func
+         * @param relationGetGroupNameFunc 用来将获取到的记录，分组， 组名为F（F一般设置为id）。
          */
-        public HasOnePreloader(Function<K, F> relationGetGroupNameFunc) {
+        public HasOnePreloader(Function<K, H> relationGetGroupNameFunc) {
             this.relationGetGroupNameFunc = relationGetGroupNameFunc;
+        }
+
+        public HasOnePreloader(Function<K, H> relationGetGroupNameFunc, BiFunction<List<H>, P, List<K>> targetRecordsFunc) {
+            this.relationGetGroupNameFunc = relationGetGroupNameFunc;
+            this.targetRecordsFunc = targetRecordsFunc;
         }
 
         /**
@@ -82,12 +94,19 @@ public class RelationPreloader {
      * @param <F> the type parameter
      */
     @SuppressWarnings("unchecked")
-    public static class BelongsToPreloader<T extends IdEntity<F>, K, F extends Serializable> extends RelationPreloader {
-        private Function<T, F> getPrimaryIdFunc;
+    public static class BelongsToPreloader<T extends IdEntity, F extends Serializable, K, P> extends RelationPreloader {
 
         public Function<T, F> getGetPrimaryIdFunc() {
             return getPrimaryIdFunc;
         }
+
+        public BiFunction<List<F>, P, List<K>> getTargetRecordsFunc() {
+            return targetRecordsFunc;
+        }
+
+        private Function<T, F> getPrimaryIdFunc;
+
+        private BiFunction<List<F>, P, List<K>> targetRecordsFunc;
 
         /**
          * Instantiates a new Belongs to preloader.
@@ -97,6 +116,12 @@ public class RelationPreloader {
         public BelongsToPreloader(Function<T, F> getPrimaryIdFunc) {
             this.getPrimaryIdFunc = getPrimaryIdFunc;
         }
+
+        public BelongsToPreloader(Function<T, F> getPrimaryIdFunc, BiFunction<List<F>, P, List<K>> targetRecordsFunc) {
+            this.getPrimaryIdFunc = getPrimaryIdFunc;
+            this.targetRecordsFunc = targetRecordsFunc;
+        }
+
 
         /**
          * 获取预加载结果，如果没有预加载过，会返回null.
@@ -131,28 +156,28 @@ public class RelationPreloader {
         }
     }
 
-    /**
-     * The type Has many preloader.
-     *
-     * @param <T> the type parameter
-     * @param <K> the type parameter
-     * @param <F> the type parameter
-     */
     @SuppressWarnings("unchecked")
-    public static class HasManyPreloader<T extends IdEntity<F>, K, F extends Serializable> extends RelationPreloader {
-        private Function<K, F> relationGetGroupNameFunc;
-
-        public Function<K, F> getRelationGetGroupNameFunc() {
+    public static class HasManyPreloader<T extends IdEntity<H>, H extends Serializable, K, P> extends RelationPreloader {
+        public Function<K, H> getRelationGetGroupNameFunc() {
             return relationGetGroupNameFunc;
         }
+
+        public BiFunction<List<H>, P, List<K>> getTargetRecordsFunc() {
+            return targetRecordsFunc;
+        }
+
+        private Function<K, H> relationGetGroupNameFunc;
+
+        private BiFunction<List<H>, P, List<K>> targetRecordsFunc;
 
         /**
          * Instantiates a new Has many preloader.
          *
          * @param relationGetGroupNameFunc the relation get group name func
          */
-        public HasManyPreloader(Function<K, F> relationGetGroupNameFunc) {
+        public HasManyPreloader(Function<K, H> relationGetGroupNameFunc, BiFunction<List<H>, P, List<K>> targetRecordsFunc) {
             this.relationGetGroupNameFunc = relationGetGroupNameFunc;
+            this.targetRecordsFunc = targetRecordsFunc;
         }
 
         /**

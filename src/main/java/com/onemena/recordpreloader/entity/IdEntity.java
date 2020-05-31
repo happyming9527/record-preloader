@@ -6,6 +6,6 @@ import java.io.Serializable;
 import java.util.concurrent.ConcurrentHashMap;
 
 public interface IdEntity<K extends Serializable> {
-    K getId();
+    K getPreloadPrimaryId();
     ConcurrentHashMap<RelationPreloader, Object> getPreloadResult();
 }

@@ -6,7 +6,7 @@
 
     <groupId>com.onemena.recordpreloader</groupId>
     <artifactId>record-preloader</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.1</version>
 
     <name>recordPreloader</name>
     <url>https://github.com/happyming9527/record-preloader</url>
@@ -17,13 +17,28 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
+<!--    <distributionManagement>-->
+<!--        <snapshotRepository>-->
+<!--            <id>lzm-snapshots</id>-->
+<!--            <name>localhost.localdomain-snapshots</name>-->
+<!--            <url>http://192.168.33.10:8081/artifactory/libs-snapshot-local</url>-->
+<!--        </snapshotRepository>-->
+<!--    </distributionManagement>-->
+
     <distributionManagement>
+        <repository>
+            <id>om</id>
+            <name>onemena-java-repo</name>
+            <url>http://repo.uwinltd.com:8081/artifactory/libs-release-local</url>
+        </repository>
         <snapshotRepository>
-            <id>lzm-snapshots</id>
-            <name>localhost.localdomain-snapshots</name>
-            <url>http://192.168.33.10:8081/artifactory/libs-snapshot-local</url>
+            <id>om</id>
+            <name>onemena-java-repo</name>
+            <url>http://repo.uwinltd.com:8081/artifactory/list/libs-snapshot-local</url>
         </snapshotRepository>
     </distributionManagement>
+
+
 
     <dependencies>
 
